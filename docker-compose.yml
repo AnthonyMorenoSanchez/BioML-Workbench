@@ -1,0 +1,9 @@
+services:
+  bioml-workbench:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bioml-workbench:latest
+    command: ["python", "-m", "bioml_workbench"]
+    volumes:
+      - ./:/app

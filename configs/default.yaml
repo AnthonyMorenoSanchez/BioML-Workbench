@@ -1,0 +1,6 @@
+app_name: bioml-workbench
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  to_file: false
+  file_path: logs/bioml_workbench.log
