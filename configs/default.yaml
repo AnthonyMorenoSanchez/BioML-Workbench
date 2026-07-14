@@ -4,3 +4,27 @@ logging:
   format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
   to_file: false
   file_path: logs/bioml_workbench.log
+
+dataset:
+  name: pbmc68k
+  source: pbmc68k
+  raw_data_path: data/raw
+  processed_data_path: data/processed
+  cache_path: data/cache
+  download_url: ""
+  checksum: ""
+
+training:
+  random_seed: 42
+  model_type: random_forest
+  batch_size: 128
+  learning_rate: 0.001
+  max_epochs: 10
+  checkpoint_path: artifacts/checkpoints
+  experiment_name: default
+
+dashboard:
+  enabled: true
+  host: 127.0.0.1
+  port: 8000
+  title: BioML Workbench Dashboard

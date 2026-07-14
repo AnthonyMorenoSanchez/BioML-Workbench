@@ -4,7 +4,13 @@ import argparse
 from pathlib import Path
 from typing import Sequence
 
-from .configuration import load_config
+import yaml
+
+from .configuration import AppConfig, load_config
+
+
+def _format_config(config: AppConfig) -> str:
+    return yaml.safe_dump(config.to_dict(), sort_keys=False)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -25,10 +31,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     config = load_config(args.config)
     if args.show_config:
-        print(f"app_name: {config.app_name}")
-        print(f"logging.level: {config.logging.level}")
-        print(f"logging.to_file: {config.logging.to_file}")
-        print(f"logging.file_path: {config.logging.file_path}")
+        print(_format_config(config))
     else:
         print(f"{config.app_name} is ready.")
 

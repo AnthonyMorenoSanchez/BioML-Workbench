@@ -26,6 +26,12 @@ make lint
 make type-check
 ```
 
+## Configuration
+
+The repository loads `configs/default.yaml` by default and supports environment variable overrides via the `BIOML_` prefix.
+
+For more details, see `docs/configuration.md`.
+
 ## Project Layout
 
 - configs/: YAML configuration files

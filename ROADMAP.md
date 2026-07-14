@@ -5,9 +5,9 @@
 - Added configuration, logging, CI, Docker, and development tooling.
 - Added tests and developer documentation.
 
-## Phase 1 — Configuration System (Planned)
-- Expand YAML-driven configuration to cover datasets, training, and dashboards.
-- Introduce environment-variable overrides and validation.
+## Phase 1 — Configuration System (Completed)
+- Expanded YAML-driven configuration to include dataset, training, and dashboard sections.
+- Added environment variable overrides and config path resolution.
 
 ## Phase 2 — Core Utilities (Planned)
 - Add a file manager, cache manager, timer utilities, and seed management.
