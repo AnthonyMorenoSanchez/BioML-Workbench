@@ -9,5 +9,6 @@
 - Expanded YAML-driven configuration to include dataset, training, and dashboard sections.
 - Added environment variable overrides and config path resolution.
 
-## Phase 2 — Core Utilities (Planned)
-- Add a file manager, cache manager, timer utilities, and seed management.
+## Phase 2 — Core Utilities (Completed)
+- Added a file manager, cache manager, timer utilities, and seed management.
+- Added reusable exception handling and configuration lifecycle management.

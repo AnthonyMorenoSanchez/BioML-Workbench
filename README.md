@@ -32,6 +32,12 @@ The repository loads `configs/default.yaml` by default and supports environment 
 
 For more details, see `docs/configuration.md`.
 
+## Core Utilities
+
+Phase 2 adds reusable utilities for file management, caching, timing, seed control, and configuration lifecycle management.
+
+For more details, see `docs/phase_2.md`.
+
 ## Project Layout
 
 - configs/: YAML configuration files

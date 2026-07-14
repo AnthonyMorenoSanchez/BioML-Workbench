@@ -16,3 +16,10 @@
 - Environment variable overrides via the `BIOML_` prefix.
 - Config path resolution with `BIOML_CONFIG_PATH`.
 - CLI support for showing resolved configuration.
+
+## [0.3.0] - 2026-07-14
+
+### Added
+- Core utility modules for file management, caching, timing, and reproducible seeding.
+- Reusable exception classes and logging-aware exception handling.
+- Configuration manager for reloadable runtime configuration.
