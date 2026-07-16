@@ -59,7 +59,6 @@ def test_download_manager_extracts_archives(tmp_path: Path) -> None:
     destination = manager.download(metadata, destination=tmp_path / "extracted")
 
     assert (destination / "sample.txt").exists()
-    assert (
-        (destination / "sample.txt").read_text(encoding="utf-8")
-        == "extracted payload"
-    )
+    assert (destination / "sample.txt").read_text(
+        encoding="utf-8"
+    ) == "extracted payload"

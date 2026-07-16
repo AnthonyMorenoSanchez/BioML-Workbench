@@ -9,10 +9,18 @@ description = "Production-grade computational biology and MLOps platform."
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [{ name = "BioML Workbench contributors" }]
-dependencies = ["PyYAML>=6.0"]
+dependencies = [
+	"PyYAML>=6.0",
+	"numpy>=1.26",
+	"scipy>=1.11",
+	"scikit-learn>=1.3",
+]
 
 [project.optional-dependencies]
 dev = ["black>=24.0", "mypy>=1.10", "pytest>=8.0", "ruff>=0.5", "types-PyYAML>=6.0"]
+ml = ["mlflow", "wandb"]
+ui = ["streamlit"]
+xgboost = ["xgboost"]
 
 [project.scripts]
 bioml-workbench = "bioml_workbench.cli:main"

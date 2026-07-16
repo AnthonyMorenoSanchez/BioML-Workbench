@@ -66,10 +66,14 @@ class DownloadManager:
         overwrite: bool = False,
         verify_checksum: bool = True,
     ) -> Path:
-        metadata = dataset if isinstance(dataset, DatasetMetadata) else DatasetMetadata(
-            name=dataset,
-            description=dataset,
-            source=dataset,
+        metadata = (
+            dataset
+            if isinstance(dataset, DatasetMetadata)
+            else DatasetMetadata(
+                name=dataset,
+                description=dataset,
+                source=dataset,
+            )
         )
 
         cache_path = self._resolve_cache_path(metadata)
@@ -113,9 +117,10 @@ class DownloadManager:
             shutil.copy2(metadata.source, cache_path)
             return
         if metadata.is_remote():
-            with urllib.request.urlopen(metadata.source) as response, open(
-                cache_path, "wb"
-            ) as handle:
+            with (
+                urllib.request.urlopen(metadata.source) as response,
+                open(cache_path, "wb") as handle,
+            ):
                 shutil.copyfileobj(response, handle)
             return
         raise ValueError(f"Unsupported dataset source: {metadata.source}")

@@ -16,9 +16,7 @@ class PreprocessingPipeline:
         min_counts: float = 1.0,
     ) -> list[list[float]]:
         return [
-            [float(value) for value in row]
-            for row in matrix
-            if sum(row) >= min_counts
+            [float(value) for value in row] for row in matrix if sum(row) >= min_counts
         ]
 
     def normalize(self, matrix: Sequence[Sequence[float]]) -> list[list[float]]:
@@ -41,8 +39,8 @@ class PreprocessingPipeline:
         for feature_index in range(feature_count):
             values = [row[feature_index] for row in matrix]
             feature_mean = sum(values) / len(values)
-            variance = (
-                sum((value - feature_mean) ** 2 for value in values) / len(values)
+            variance = sum((value - feature_mean) ** 2 for value in values) / len(
+                values
             )
             feature_std = sqrt(variance) if variance else 0.0
             means.append(feature_mean)

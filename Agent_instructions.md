@@ -10,6 +10,8 @@
 - If the virtual environment is missing, create it and install required dependencies inside it.
 - On Windows, use `.venv\Scripts\python.exe` and `.venv\Scripts\Activate.ps1` for execution.
 - Run tests and tooling from the activated environment rather than the system interpreter.
+ - Ensure scientific and ML libraries are installed in the venv when needed: `numpy`, `scipy`, `scikit-learn`, and related packages.
+ - If a phase requires library-backed implementations, install the packages into the venv before running tests.
 
 ---
 

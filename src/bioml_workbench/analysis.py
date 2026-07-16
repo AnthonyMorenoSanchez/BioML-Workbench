@@ -17,8 +17,7 @@ class AnalysisModule:
             return {}
 
         feature_names = list(
-            feature_names
-            or [f"feature_{index}" for index in range(len(matrix[0]))]
+            feature_names or [f"feature_{index}" for index in range(len(matrix[0]))]
         )
         if len(feature_names) != len(matrix[0]):
             raise ValueError("feature_names length must match the number of columns")
