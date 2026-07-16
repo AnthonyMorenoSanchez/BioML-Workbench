@@ -2,17 +2,17 @@ from __future__ import annotations
 
 from typing import List, Sequence
 
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression  # type: ignore[import-untyped]
 
 
 class BaselineClassifier:
     """Simple majority-class predictor."""
 
     def __init__(self) -> None:
-        self._majority = None
+        self._majority: int | None = None
 
     def fit(self, X: Sequence[Sequence[float]] | None, y: Sequence[int]) -> None:
-        counts = {}
+        counts: dict[int, int] = {}
         for label in y:
             counts[label] = counts.get(label, 0) + 1
         self._majority = max(counts.items(), key=lambda kv: kv[1])[0]

@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import List, Sequence
+from typing import Any, List, Sequence
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier  # type: ignore[import-untyped]
+from sklearn.neural_network import MLPClassifier  # type: ignore[import-untyped]
 
 
 class RandomForestWrapper:
     """Simple wrapper for RandomForestClassifier."""
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         self.model = RandomForestClassifier(**kwargs)
 
     def fit(self, X: Sequence[Sequence[float]], y: Sequence[int]) -> None:
@@ -25,15 +25,15 @@ class XGBoostWrapper:
     is not installed.
     """
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         try:
-            from xgboost import XGBClassifier
+            from xgboost import XGBClassifier  # type: ignore[import-not-found]
 
-            self._cls = XGBClassifier
+            self._cls: Any = XGBClassifier
         except Exception as exc:  # pragma: no cover - environment dependent
             raise ImportError("xgboost is required for XGBoostWrapper") from exc
-        self.model = None
-        self.kwargs = kwargs
+        self.model: Any = None
+        self.kwargs: dict[str, Any] = kwargs
 
     def fit(self, X: Sequence[Sequence[float]], y: Sequence[int]) -> None:
         self.model = self._cls(**self.kwargs)
@@ -48,7 +48,7 @@ class XGBoostWrapper:
 class MLPWrapper:
     """Wrapper around scikit-learn's MLPClassifier."""
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         self.model = MLPClassifier(**kwargs)
 
     def fit(self, X: Sequence[Sequence[float]], y: Sequence[int]) -> None:

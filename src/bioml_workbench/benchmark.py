@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 from typing import Any, Sequence
 
-from sklearn.metrics import (
+from sklearn.metrics import (  # type: ignore[import-untyped]
     accuracy_score,
     f1_score,
     precision_score,

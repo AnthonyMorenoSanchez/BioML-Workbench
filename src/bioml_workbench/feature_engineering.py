@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import List, Sequence
+from typing import List, Sequence, cast
 
 import numpy as np
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA  # type: ignore[import-untyped]
 
 
 def compute_feature_variances(matrix: Sequence[Sequence[float]]) -> List[float]:
@@ -29,7 +29,7 @@ def simple_pca(
     arr = np.asarray(matrix, dtype=float)
     pca = PCA(n_components=min(n_components, arr.shape[1]))
     transformed = pca.fit_transform(arr)
-    return transformed.tolist()
+    return cast(List[List[float]], transformed.tolist())
 
 
 def incremental_pca(
@@ -47,4 +47,4 @@ def incremental_pca(
     for start in range(0, arr.shape[0], batch_size):
         ipca.partial_fit(arr[start : start + batch_size])
     transformed = ipca.transform(arr)
-    return transformed.tolist()
+    return cast(List[List[float]], transformed.tolist())

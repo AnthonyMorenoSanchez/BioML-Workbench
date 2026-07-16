@@ -15,9 +15,9 @@ class ExperimentTracker:
         self.run_name = run_name
         self.backend = backend
         try:
-            import mlflow
+            import mlflow  # type: ignore[import-not-found]
 
-            self._mlflow = mlflow
+            self._mlflow: Any | None = mlflow
         except Exception:  # pragma: no cover - optional dependency
             self._mlflow = None
 
