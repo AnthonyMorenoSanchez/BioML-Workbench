@@ -9,6 +9,7 @@ from .configuration import (
     load_config,
 )
 from .configuration_manager import ConfigurationManager
+from .data import DatasetMetadata, DatasetRegistry, DownloadManager
 from .logging import configure_logging, get_logger
 from .utils import (
     CacheManager,
@@ -23,6 +24,9 @@ __all__ = [
     "ConfigurationManager",
     "DashboardConfig",
     "DatasetConfig",
+    "DatasetMetadata",
+    "DatasetRegistry",
+    "DownloadManager",
     "FileManager",
     "CacheManager",
     "LoggingConfig",

@@ -12,3 +12,8 @@
 ## Phase 2 — Core Utilities (Completed)
 - Added a file manager, cache manager, timer utilities, and seed management.
 - Added reusable exception handling and configuration lifecycle management.
+
+## Phase 3 — Data Engineering (Completed)
+- Added a dataset registry for known datasets and metadata lookup.
+- Added a download manager with checksum validation and archive extraction support.
+- Added tests covering dataset registration, downloads, and extraction flows.
