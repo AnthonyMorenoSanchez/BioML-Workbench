@@ -17,3 +17,11 @@
 - Added a dataset registry for known datasets and metadata lookup.
 - Added a download manager with checksum validation and archive extraction support.
 - Added tests covering dataset registration, downloads, and extraction flows.
+
+## Phase 4 — Exploratory Analysis (Completed)
+- Added reusable summary statistics, metadata summaries, QC reporting, and lightweight visualization helpers.
+- Added regression tests for analysis and QC workflows.
+
+## Phase 5 — Preprocessing Pipeline (Completed)
+- Added a configurable preprocessing pipeline with filtering, normalization, scaling, feature selection, dimensionality reduction, neighbor-graph construction, and a UMAP-style projection helper.
+- Added regression tests for the main preprocessing steps.

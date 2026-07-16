@@ -1,5 +1,6 @@
 """BioML Workbench package."""
 
+from .analysis import AnalysisModule, VisualizationModule
 from .configuration import (
     AppConfig,
     DashboardConfig,
@@ -11,6 +12,7 @@ from .configuration import (
 from .configuration_manager import ConfigurationManager
 from .data import DatasetMetadata, DatasetRegistry, DownloadManager
 from .logging import configure_logging, get_logger
+from .preprocessing import PreprocessingPipeline
 from .utils import (
     CacheManager,
     FileManager,
@@ -21,6 +23,7 @@ from .utils import (
 
 __all__ = [
     "AppConfig",
+    "AnalysisModule",
     "ConfigurationManager",
     "DashboardConfig",
     "DatasetConfig",
@@ -28,11 +31,13 @@ __all__ = [
     "DatasetRegistry",
     "DownloadManager",
     "FileManager",
+    "PreprocessingPipeline",
     "CacheManager",
     "LoggingConfig",
     "SeedManager",
     "Timer",
     "TrainingConfig",
+    "VisualizationModule",
     "configure_logging",
     "get_logger",
     "load_config",
