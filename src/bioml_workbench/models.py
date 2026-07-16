@@ -20,7 +20,10 @@ class RandomForestWrapper:
 
 
 class XGBoostWrapper:
-    """Wrapper for XGBoost classifier; raises informative error if xgboost is not installed."""
+    """
+    Wrapper for XGBoost classifier; raises informative error if xgboost
+    is not installed.
+    """
 
     def __init__(self, **kwargs) -> None:
         try:

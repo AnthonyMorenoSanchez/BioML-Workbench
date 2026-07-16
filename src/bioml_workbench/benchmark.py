@@ -1,10 +1,15 @@
 from __future__ import annotations
 
-from typing import Any, Sequence
 import csv
 from pathlib import Path
+from typing import Any, Sequence
 
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score,
+)
 
 
 def run_classification_benchmark(

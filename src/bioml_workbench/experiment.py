@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import Any
 import json
 from pathlib import Path
+from typing import Any
 
 
 class ExperimentTracker:
-    """Simple experiment tracker that uses MLflow when available, otherwise writes JSON artifacts."""
+    """
+    Simple experiment tracker that uses MLflow when available, otherwise
+    writes JSON artifacts.
+    """
 
     def __init__(self, run_name: str | None = None, backend: str | None = None) -> None:
         self.run_name = run_name

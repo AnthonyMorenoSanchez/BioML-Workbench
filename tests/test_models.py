@@ -1,4 +1,4 @@
-from bioml_workbench.models import RandomForestWrapper, MLPWrapper
+from bioml_workbench.models import MLPWrapper, RandomForestWrapper
 
 
 def test_random_forest_wrapper_basic():
