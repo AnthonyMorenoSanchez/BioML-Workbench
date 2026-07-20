@@ -41,6 +41,14 @@ A minimal FastAPI app is available for serving predictions:
 uvicorn bioml_workbench.api:app --reload
 ```
 
+## End-to-End Demo
+
+The project now includes a complete demo pipeline that runs preprocessing, training, artifact generation, and summary export from one entry point:
+
+```bash
+python -m bioml_workbench --run-pipeline
+```
+
 ## Development Commands
 
 ```bash

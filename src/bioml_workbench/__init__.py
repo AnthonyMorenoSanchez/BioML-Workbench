@@ -13,6 +13,7 @@ from .configuration_manager import ConfigurationManager
 from .data import DatasetMetadata, DatasetRegistry, DownloadManager
 from .inference import InferenceService
 from .logging import configure_logging, get_logger
+from .pipeline import EndToEndPipeline
 from .preprocessing import PreprocessingPipeline
 from .utils import (
     CacheManager,
@@ -34,6 +35,7 @@ __all__ = [
     "DownloadManager",
     "FileManager",
     "InferenceService",
+    "EndToEndPipeline",
     "PreprocessingPipeline",
     "CacheManager",
     "LoggingConfig",
