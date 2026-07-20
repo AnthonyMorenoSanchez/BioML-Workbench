@@ -16,6 +16,21 @@ It provides a modular foundation for future omics pipelines, model training, exp
 ```bash
 python -m pip install -e .[dev]
 python -m bioml_workbench --show-config
+python -m bioml_workbench --run-workflow
+```
+
+## End-to-End Workflow
+
+The package now includes a lightweight training workflow that trains a simple classifier, saves metrics and a model artifact, and can be reused as the foundation for larger biological ML pipelines.
+
+```python
+from bioml_workbench.workflow import TrainingWorkflow
+from bioml_workbench.inference import InferenceService
+
+workflow = TrainingWorkflow(output_dir="artifacts")
+result = workflow.run([[0.0, 0.0], [1.0, 1.0]], [0, 1], model_name="simple_logistic")
+service = InferenceService("artifacts/model.pkl")
+print(service.predict([[0.1, 0.1]]))
 ```
 
 ## Development Commands

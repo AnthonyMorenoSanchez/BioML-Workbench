@@ -7,6 +7,7 @@ from typing import Sequence
 import yaml
 
 from .configuration import AppConfig, load_config
+from .workflow import TrainingWorkflow
 
 
 def _format_config(config: AppConfig) -> str:
@@ -27,11 +28,31 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="store_true",
         help="Print the resolved configuration and exit",
     )
+    parser.add_argument(
+        "--run-workflow",
+        action="store_true",
+        help="Run a small demo training workflow and save artifacts",
+    )
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
     if args.show_config:
         print(_format_config(config))
+    elif args.run_workflow:
+        workflow = TrainingWorkflow(output_dir="artifacts")
+        sample_X = [
+            [0.0, 0.0],
+            [0.1, 0.0],
+            [0.0, 0.1],
+            [0.2, 0.1],
+            [1.0, 1.0],
+            [1.1, 1.0],
+            [1.0, 1.1],
+            [1.2, 1.1],
+        ]
+        sample_y = [0, 0, 0, 0, 1, 1, 1, 1]
+        result = workflow.run(sample_X, sample_y, model_name="simple_logistic")
+        print(f"Workflow completed with accuracy {result['metrics']['accuracy']:.3f}")
     else:
         print(f"{config.app_name} is ready.")
 

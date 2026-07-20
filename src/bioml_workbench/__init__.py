@@ -11,6 +11,7 @@ from .configuration import (
 )
 from .configuration_manager import ConfigurationManager
 from .data import DatasetMetadata, DatasetRegistry, DownloadManager
+from .inference import InferenceService
 from .logging import configure_logging, get_logger
 from .preprocessing import PreprocessingPipeline
 from .utils import (
@@ -20,6 +21,7 @@ from .utils import (
     Timer,
     timed_section,
 )
+from .workflow import TrainingWorkflow
 
 __all__ = [
     "AppConfig",
@@ -31,12 +33,14 @@ __all__ = [
     "DatasetRegistry",
     "DownloadManager",
     "FileManager",
+    "InferenceService",
     "PreprocessingPipeline",
     "CacheManager",
     "LoggingConfig",
     "SeedManager",
     "Timer",
     "TrainingConfig",
+    "TrainingWorkflow",
     "VisualizationModule",
     "configure_logging",
     "get_logger",
