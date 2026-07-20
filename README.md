@@ -33,6 +33,14 @@ service = InferenceService("artifacts/model.pkl")
 print(service.predict([[0.1, 0.1]]))
 ```
 
+## API Preview
+
+A minimal FastAPI app is available for serving predictions:
+
+```bash
+uvicorn bioml_workbench.api:app --reload
+```
+
 ## Development Commands
 
 ```bash

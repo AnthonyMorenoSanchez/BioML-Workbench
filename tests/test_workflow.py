@@ -30,3 +30,15 @@ def test_training_workflow_runs_and_saves_artifacts(tmp_path: Path) -> None:
     with open(tmp_path / "model.pkl", "rb") as handle:
         loaded_model = pickle.load(handle)
     assert loaded_model is not None
+
+
+def test_training_workflow_supports_random_forest(tmp_path: Path) -> None:
+    workflow = TrainingWorkflow(output_dir=tmp_path)
+    result = workflow.run(
+        [[0.0, 0.0], [0.1, 0.0], [1.0, 1.0], [1.1, 1.0]],
+        [0, 0, 1, 1],
+        model_name="random_forest",
+    )
+
+    assert result["metrics"]["accuracy"] >= 0.8
+    assert (tmp_path / "model.pkl").exists()

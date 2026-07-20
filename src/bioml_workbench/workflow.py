@@ -7,6 +7,7 @@ from typing import Any, Sequence
 
 from .benchmark import run_classification_benchmark, save_metrics_csv
 from .ml import BaselineClassifier, SimpleLogisticRegression
+from .models import RandomForestWrapper
 
 
 class TrainingWorkflow:
@@ -22,10 +23,13 @@ class TrainingWorkflow:
         y: Sequence[int],
         model_name: str = "simple_logistic",
     ) -> dict[str, Any]:
+        model: Any
         if model_name == "baseline":
             model = BaselineClassifier()
         elif model_name == "simple_logistic":
             model = SimpleLogisticRegression(n_iter=200)
+        elif model_name == "random_forest":
+            model = RandomForestWrapper(random_state=42)
         else:
             raise ValueError(f"Unsupported model name: {model_name}")
 
@@ -49,4 +53,8 @@ class TrainingWorkflow:
         manifest_path = self.output_dir / "training_manifest.json"
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
-        return {"model": model, "metrics": metrics, "artifacts": [str(metrics_path), str(model_path), str(manifest_path)]}
+        return {
+            "model": model,
+            "metrics": metrics,
+            "artifacts": [str(metrics_path), str(model_path), str(manifest_path)],
+        }
