@@ -3,6 +3,36 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
+
+
+class ExperimentRun:
+    """Persist reproducible run artifacts in a unique local directory."""
+
+    def __init__(self, path: str | Path) -> None:
+        self.path = Path(path)
+        self.path.mkdir(parents=True, exist_ok=False)
+
+    @classmethod
+    def create(cls, root: str | Path, dataset_name: str) -> "ExperimentRun":
+        run_id = f"{dataset_name}-{uuid4().hex[:12]}"
+        return cls(Path(root) / "runs" / run_id)
+
+    def log_config(self, config: dict[str, Any]) -> Path:
+        return self._write_json("config.json", config)
+
+    def log_metrics(self, metrics: dict[str, Any]) -> Path:
+        return self._write_json("metrics.json", metrics)
+
+    def write_report(self, markdown: str) -> Path:
+        report_path = self.path / "report.md"
+        report_path.write_text(markdown, encoding="utf-8")
+        return report_path
+
+    def _write_json(self, filename: str, payload: dict[str, Any]) -> Path:
+        output_path = self.path / filename
+        output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        return output_path
 
 
 class ExperimentTracker:

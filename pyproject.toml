@@ -14,9 +14,12 @@ dependencies = [
 	"numpy>=1.26",
 	"scipy>=1.11",
 	"scikit-learn>=1.3",
+	"joblib>=1.2",
+	"pandas>=2.0",
 	"fastapi",
 	"anndata",
 	"scvelo",
+	"plotly>=5.0",
 	"igraph>=0.11",
 	"leidenalg>=0.10",
 ]
@@ -64,4 +67,8 @@ warn_unused_configs = true
 
 [[tool.mypy.overrides]]
 module = ["anndata", "anndata.*", "scanpy", "scanpy.*", "scvelo", "scvelo.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["joblib", "pandas", "pandas.*", "plotly", "plotly.*"]
 ignore_missing_imports = true

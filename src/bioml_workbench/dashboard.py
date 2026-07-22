@@ -146,4 +146,5 @@ def build_dashboard_payload(data: dict[str, Any]) -> dict[str, Any]:
         "processed": processed,
         "sample_names": data["sample_names"],
         "feature_names": data["feature_names"],
+        "adata": data.get("adata"),
     }

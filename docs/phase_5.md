@@ -1,12 +1,15 @@
-# Phase 5 — Preprocessing Pipeline
+# Phase 5 — Tabular Preprocessing Pipeline
 
 Phase 5 introduces a configurable preprocessing pipeline for tabular data.
 
 ## Completed work
 
-- Added a preprocessing pipeline with configurable quality filtering, normalization, scaling, feature selection, dimensionality reduction, and neighbor-graph construction.
-- Added support for a lightweight UMAP-style projection helper based on dimensionality reduction.
+- Added a preprocessing pipeline with configurable quality filtering, normalization, scaling, feature selection, and neighbor-graph construction for small tabular inputs.
 - Added tests covering filtering, normalization, scaling, feature selection, and dimensionality reduction.
+
+## Scope
+
+This module remains the generic tabular path. Its legacy dimensionality-reduction and UMAP-style helpers are not biological PCA or UMAP implementations. Real sparse single-cell preprocessing is implemented separately in `bioml_workbench.single_cell.preprocessing` and documented in `phase_d_single_cell_analysis.md`.
 
 ## Usage
 
