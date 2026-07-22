@@ -27,7 +27,8 @@ def _row_count(matrix: Any) -> int:
 
 
 def load_tabular_data(path: str | Path) -> dict[str, Any]:
-    """Load a tabular matrix from a CSV file with a sample column and feature columns."""
+    """Load a tabular matrix from a CSV file with 
+    a sample column and feature columns."""
     file_path = Path(path)
     with file_path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -114,7 +115,9 @@ def build_dashboard_payload(data: dict[str, Any]) -> dict[str, Any]:
             [row[index] for row in sample_matrix],
             bins=5,
         )
-        for index, feature_name in enumerate(data["feature_names"][: len(sample_matrix[0])])
+        for index, feature_name in enumerate(
+            data["feature_names"][: len(sample_matrix[0])]
+            )
     }
 
     pipeline = PreprocessingPipeline()

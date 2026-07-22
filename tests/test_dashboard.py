@@ -40,7 +40,8 @@ def test_load_pbmc68k_dataset_reuses_h5ad_cache(
         read_h5ad=lambda path: read_calls.append(Path(path)) or expected
     )
     fake_scvelo = SimpleNamespace(
-        datasets=SimpleNamespace(pbmc68k=lambda: (_ for _ in ()).throw(AssertionError()))
+        datasets=SimpleNamespace(
+            pbmc68k=lambda: (_ for _ in ()).throw(AssertionError()))
     )
     monkeypatch.setitem(sys.modules, "anndata", fake_anndata)
     monkeypatch.setitem(sys.modules, "scvelo", fake_scvelo)
