@@ -20,6 +20,11 @@ def _sample_dense_matrix(
         return [list(row) for row in matrix.toarray().tolist()]
     return [list(row) for row in matrix]
 
+def _row_count(matrix: Any) -> int:
+    if hasattr(matrix, "shape"):
+        return int(matrix.shape[0])
+    return len(matrix
+
 
 def load_tabular_data(path: str | Path) -> dict[str, Any]:
     """Load a tabular matrix from a CSV file with a sample column and feature columns."""
@@ -129,7 +134,7 @@ def build_dashboard_payload(data: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "summary": {
-            "sample_count": len(matrix),
+            "sample_count": _row_count(matrix),
             "feature_count": len(data["feature_names"]),
             "qc_report": qc_report,
         },
