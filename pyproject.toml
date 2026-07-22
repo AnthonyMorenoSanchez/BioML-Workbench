@@ -61,3 +61,6 @@ warn_return_any = true
 warn_unused_configs = true
 
 
+[[tool.mypy.overrides]]
+module = ["anndata", "anndata.*", "scvelo", "scvelo.*"]
+ignore_missing_imports = true
