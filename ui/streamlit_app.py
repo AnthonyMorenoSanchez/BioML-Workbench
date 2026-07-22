@@ -149,7 +149,7 @@ if page == "Preprocessing":
     if adata is None:
         st.write(payload["processed"])
     else:
-        min_genes = st.number_input("Minimum detected genes", 0, 10_000, 200)
+        min_genes = st.number_input("Minimum detected genes", 0, 10_000, 50)
         n_top_genes = st.number_input("Highly variable genes", 2, 10_000, 2_000)
         n_pcs = st.number_input("PCA components", 2, 100, 50)
         n_neighbors = st.number_input("Neighbors", 2, 100, 15)

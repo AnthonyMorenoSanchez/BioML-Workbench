@@ -9,7 +9,7 @@ from .qc import calculate_qc_metrics
 
 def preprocess_adata(
     adata: Any,
-    min_genes: int = 200,
+    min_genes: int = 50,
     min_cells_per_gene: int = 3,
     target_sum: float = 10_000,
     n_top_genes: int = 2_000,

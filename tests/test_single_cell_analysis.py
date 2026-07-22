@@ -41,7 +41,7 @@ def test_calculate_qc_metrics_preserves_sparse_counts() -> None:
 def test_preprocess_adata_creates_standard_analysis_slots() -> None:
     adata = make_adata()
 
-    preprocess_adata(
+    processed = preprocess_adata(
         adata,
         min_genes=1,
         min_cells_per_gene=1,
@@ -51,17 +51,17 @@ def test_preprocess_adata_creates_standard_analysis_slots() -> None:
         random_state=42,
     )
 
-    assert adata.layers["counts"].format == "csr"
-    assert "highly_variable" in adata.var
-    assert adata.obsm["X_pca"].shape == (adata.n_obs, 2)
-    assert "connectivities" in adata.obsp
-    assert adata.obsm["X_umap"].shape == (adata.n_obs, 2)
-    assert np.isfinite(adata.obsm["X_umap"]).all()
+    assert processed.layers["counts"].format == "csr"
+    assert "highly_variable" in processed.var
+    assert processed.obsm["X_pca"].shape == (processed.n_obs, 2)
+    assert "connectivities" in processed.obsp
+    assert processed.obsm["X_umap"].shape == (processed.n_obs, 2)
+    assert np.isfinite(processed.obsm["X_umap"]).all()
 
 
 def test_cluster_cells_adds_unsupervised_cluster_metadata() -> None:
     adata = make_adata()
-    preprocess_adata(
+    processed = preprocess_adata(
         adata,
         min_genes=1,
         min_cells_per_gene=1,
@@ -71,8 +71,8 @@ def test_cluster_cells_adds_unsupervised_cluster_metadata() -> None:
         random_state=42,
     )
 
-    cluster_cells(adata, resolution=0.5, random_state=42)
+    cluster_cells(processed, resolution=0.5, random_state=42)
 
-    assert "leiden" in adata.obs
-    assert adata.obs["leiden"].notna().all()
-    assert adata.uns["label_provenance"]["leiden"] == "unsupervised_cluster"
+    assert "leiden" in processed.obs
+    assert processed.obs["leiden"].notna().all()
+    assert processed.uns["label_provenance"]["leiden"] == "unsupervised_cluster"
