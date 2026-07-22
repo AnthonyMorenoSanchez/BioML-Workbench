@@ -33,16 +33,19 @@ pages = [
 page = st.sidebar.selectbox("Page", pages)
 
 st.sidebar.caption("Choose a data source")
-use_pbmc = st.sidebar.checkbox("Use PBMC68k sample dataset", value=True)
+use_pbmc = st.sidebar.checkbox("Use PBMC68k sample dataset", value=False)
 
 if use_pbmc:
-    try:
-        dataset_payload = load_pbmc68k_dataset(cache_dir="data/cache")
-        payload = build_dashboard_payload(dataset_payload)
-        st.session_state.payload = payload
-    except Exception as exc:  # pragma: no cover - UI error path
-        st.sidebar.error(f"Unable to load PBMC68k: {exc}")
-        payload = st.session_state.payload
+    st.sidebar.caption("The first load downloads and caches the sparse dataset locally.")
+    if st.sidebar.button("Load PBMC68k"):
+        try:
+            with st.spinner("Loading cached PBMC68k data or downloading it once..."):
+                dataset_payload = load_pbmc68k_dataset(cache_dir="data/cache")
+                st.session_state.payload = build_dashboard_payload(dataset_payload)
+                st.session_state.data_source = "pbmc68k"
+        except Exception as exc:  # pragma: no cover - UI error path
+            st.sidebar.error(f"Unable to load PBMC68k: {exc}")
+    payload = st.session_state.payload
 else:
     uploaded_file = st.sidebar.file_uploader(
         "Upload a CSV matrix",
@@ -56,6 +59,7 @@ else:
         data = load_tabular_data(path)
         payload = build_dashboard_payload(data)
         st.session_state.payload = payload
+        st.session_state.data_source = "uploaded_csv"
     else:
         payload = st.session_state.payload
 

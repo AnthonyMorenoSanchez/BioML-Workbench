@@ -21,6 +21,7 @@ dev = ["black>=24.0", "mypy>=1.10", "pytest>=8.0", "ruff>=0.5", "types-PyYAML>=6
 ml = ["mlflow", "wandb"]
 ui = ["streamlit"]
 xgboost = ["xgboost"]
+singlecell = ["anndata>=0.10", "scvelo>=0.3"]
 
 [project.scripts]
 bioml-workbench = "bioml_workbench.cli:main"

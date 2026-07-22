@@ -19,6 +19,12 @@ python -m pip install -e .[dev]
 .\.venv\Scripts\python.exe -m streamlit run ui/streamlit_app.py
 ```
 
+For the PBMC68k workflow, install the optional single-cell dependencies before starting the dashboard:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[singlecell,ui]"
+```
+
 The dashboard accepts a CSV file with a `sample` column followed by one or more numeric feature columns. After upload it will:
 
 - show sample/feature summaries
@@ -26,6 +32,12 @@ The dashboard accepts a CSV file with a `sample` column followed by one or more 
 - run preprocessing steps
 - display feature histograms and processed outputs
 - train a baseline classifier and save metrics to the `artifacts/` folder
+
+### PBMC68k sample dataset
+
+In the sidebar, enable **Use PBMC68k sample dataset**, then select **Load PBMC68k**. The application uses `scvelo.datasets.pbmc68k()` rather than trying to download the protected 10x dataset landing page directly. The sparse AnnData object is saved after its first load at `data/cache/pbmc68k/pbmc68k.h5ad`; later loads reuse that local cache.
+
+Disable the PBMC68k option to switch back to independently uploaded CSV datasets. The app does not download or reload PBMC68k merely because the checkbox is selected.
 
 ### Run the full test suite
 

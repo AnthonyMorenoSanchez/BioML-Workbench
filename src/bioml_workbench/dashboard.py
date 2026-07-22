@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from .analysis import AnalysisModule, VisualizationModule
-from .data import DatasetMetadata, DatasetRegistry, DownloadManager, load_tenx_matrix
+from .data import DatasetMetadata, DatasetRegistry
 from .preprocessing import PreprocessingPipeline
 
 
@@ -51,42 +51,47 @@ def register_pbmc68k_dataset(cache_dir: str | Path | None = None) -> DatasetRegi
         description="Fresh 68k PBMCs Donor A sample from 10x Genomics",
         source="https://www.10xgenomics.com/datasets/fresh-68-k-pbm-cs-donor-a-1-standard-1-1-0",
         checksum=None,
-        archive=True,
-        expected_files=("barcodes.tsv", "genes.tsv", "matrix.mtx"),
+        archive=False,
+        expected_files=("pbmc68k.h5ad",),
         metadata={
             "license": "CC BY 4.0",
             "attribution": "10x Genomics",
-            "format": "10x Gene Expression Matrix",
-            "download_url": "https://cf.10xgenomics.com/samples/cell-exp/1.1.0/fresh_68k_pbmc_donor_a/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz",
+            "format": "AnnData sparse matrix",
+            "loader": "scvelo.datasets.pbmc68k",
         },
     )
     registry.register(metadata)
     return registry
 
 
-def _resolve_tenx_matrix_dir(destination: Path) -> Path:
-    candidates = [
-        destination,
-        destination / "filtered_gene_bc_matrices" / "hg19",
-        destination / "filtered_gene_bc_matrices",
-        destination / "hg19",
-    ]
-    for candidate in candidates:
-        if (candidate / "barcodes.tsv").exists() and (candidate / "genes.tsv").exists():
-            return candidate
-    raise FileNotFoundError(f"Could not locate a 10x matrix directory under {destination}")
-
-
 def load_pbmc68k_dataset(cache_dir: str | Path | None = None) -> dict[str, Any]:
-    """Download or reuse the PBMC68k sample data and load it through the 10x loader."""
-    registry = register_pbmc68k_dataset(cache_dir=cache_dir)
-    metadata = registry.get("pbmc68k")
-    manager = DownloadManager(cache_dir=cache_dir or "data/cache")
-    destination = manager.download(
-        metadata,
-        destination=Path(cache_dir or "data/cache") / "pbmc68k" / "extracted",
-    )
-    return load_tenx_matrix(_resolve_tenx_matrix_dir(destination))
+    """Load PBMC68k through scvelo and persist it as a local sparse AnnData cache."""
+    cache_path = Path(cache_dir or "data/cache") / "pbmc68k" / "pbmc68k.h5ad"
+    try:
+        import anndata as ad
+        import scvelo as scv
+    except ImportError as exc:  # pragma: no cover - optional dependency
+        raise ImportError(
+            "PBMC68k requires the 'singlecell' extra. Install with "
+            "python -m pip install -e '.[singlecell]'."
+        ) from exc
+
+    if cache_path.exists():
+        adata = ad.read_h5ad(cache_path)
+    else:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        adata = scv.datasets.pbmc68k()
+        adata.write_h5ad(cache_path)
+
+    feature_names = [str(name) for name in adata.var_names]
+    return {
+        "matrix": adata.X,
+        "sample_names": [str(name) for name in adata.obs_names],
+        "feature_names": feature_names,
+        "feature_metadata": adata.var.reset_index().to_dict(orient="records"),
+        "adata": adata,
+        "path": str(cache_path),
+    }
 
 
 def build_dashboard_payload(data: dict[str, Any]) -> dict[str, Any]:

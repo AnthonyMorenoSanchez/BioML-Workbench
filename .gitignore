@@ -240,3 +240,5 @@ Icon?
 *.swp
 *.swo
 *~
+data/PBMC/
+*.h5ad
