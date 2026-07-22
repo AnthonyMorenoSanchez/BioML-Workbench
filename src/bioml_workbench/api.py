@@ -3,12 +3,12 @@ from __future__ import annotations
 from types import SimpleNamespace
 from typing import Any
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from bioml_workbench.api import app
-from bioml_workbench.inference import InferenceService
+from .inference import InferenceService
 
-# app = FastAPI(title="BioML Workbench API")
+app = FastAPI(title="BioML Workbench API")
 
 
 @app.get("/")
