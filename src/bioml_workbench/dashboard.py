@@ -23,7 +23,7 @@ def _sample_dense_matrix(
 def _row_count(matrix: Any) -> int:
     if hasattr(matrix, "shape"):
         return int(matrix.shape[0])
-    return len(matrix
+    return len(matrix)
 
 
 def load_tabular_data(path: str | Path) -> dict[str, Any]:
