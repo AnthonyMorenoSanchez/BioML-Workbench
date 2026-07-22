@@ -76,9 +76,14 @@ class DownloadManager:
             )
         )
 
-        cache_path = self._resolve_cache_path(metadata)
+        download_source = (
+            metadata.metadata.get("download_url")
+            or metadata.metadata.get("source_url")
+            or metadata.source
+        )
+        cache_path = self._resolve_cache_path(metadata, download_source)
         if not cache_path.exists() or overwrite:
-            self._fetch_to_cache(metadata, cache_path)
+            self._fetch_to_cache(metadata, cache_path, download_source)
 
         if verify_checksum and metadata.checksum:
             self._validate_checksum(cache_path, metadata.checksum)
@@ -94,8 +99,10 @@ class DownloadManager:
         shutil.copy2(cache_path, target_path)
         return target_path
 
-    def _resolve_cache_path(self, metadata: DatasetMetadata) -> Path:
-        source_name = Path(metadata.source).name or metadata.name
+    def _resolve_cache_path(
+        self, metadata: DatasetMetadata, source: str | None = None
+    ) -> Path:
+        source_name = Path(source or metadata.source).name or metadata.name
         if metadata.is_remote():
             source_name = metadata.name
         cache_dir = self.cache_dir / metadata.name
@@ -111,14 +118,17 @@ class DownloadManager:
             return self.cache_dir / metadata.name / "extracted"
         return self.cache_dir / metadata.name / f"{metadata.name}.bin"
 
-    def _fetch_to_cache(self, metadata: DatasetMetadata, cache_path: Path) -> None:
+    def _fetch_to_cache(
+        self, metadata: DatasetMetadata, cache_path: Path, source: str | None = None
+    ) -> None:
         cache_path.parent.mkdir(parents=True, exist_ok=True)
+        source_url = source or metadata.source
         if metadata.is_local():
-            shutil.copy2(metadata.source, cache_path)
+            shutil.copy2(source_url, cache_path)
             return
         if metadata.is_remote():
             with (
-                urllib.request.urlopen(metadata.source) as response,
+                urllib.request.urlopen(source_url) as response,
                 open(cache_path, "wb") as handle,
             ):
                 shutil.copyfileobj(response, handle)

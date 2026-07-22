@@ -5,7 +5,11 @@ from typing import Any
 
 import streamlit as st
 
-from bioml_workbench.dashboard import build_dashboard_payload, load_tabular_data
+from bioml_workbench.dashboard import (
+    build_dashboard_payload,
+    load_pbmc68k_dataset,
+    load_tabular_data,
+)
 from bioml_workbench.experiment import ExperimentTracker
 from bioml_workbench.workflow import TrainingWorkflow
 
@@ -28,20 +32,32 @@ pages = [
 ]
 page = st.sidebar.selectbox("Page", pages)
 
-uploaded_file = st.sidebar.file_uploader(
-    "Upload a CSV matrix",
-    type=["csv"],
-    help="Expected columns: sample, feature_1, feature_2, ...",
-)
+st.sidebar.caption("Choose a data source")
+use_pbmc = st.sidebar.checkbox("Use PBMC68k sample dataset", value=True)
 
-if uploaded_file is not None:
-    path = Path(uploaded_file.name)
-    path.write_bytes(uploaded_file.getvalue())
-    data = load_tabular_data(path)
-    payload = build_dashboard_payload(data)
-    st.session_state.payload = payload
+if use_pbmc:
+    try:
+        dataset_payload = load_pbmc68k_dataset(cache_dir="data/cache")
+        payload = build_dashboard_payload(dataset_payload)
+        st.session_state.payload = payload
+    except Exception as exc:  # pragma: no cover - UI error path
+        st.sidebar.error(f"Unable to load PBMC68k: {exc}")
+        payload = st.session_state.payload
 else:
-    payload = st.session_state.payload
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload a CSV matrix",
+        type=["csv"],
+        help="Expected columns: sample, feature_1, feature_2, ...",
+    )
+
+    if uploaded_file is not None:
+        path = Path(uploaded_file.name)
+        path.write_bytes(uploaded_file.getvalue())
+        data = load_tabular_data(path)
+        payload = build_dashboard_payload(data)
+        st.session_state.payload = payload
+    else:
+        payload = st.session_state.payload
 
 if payload is None:
     st.info("Upload a CSV file to begin analysis.")

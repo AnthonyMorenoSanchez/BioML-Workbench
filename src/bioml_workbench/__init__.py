@@ -10,7 +10,7 @@ from .configuration import (
     load_config,
 )
 from .configuration_manager import ConfigurationManager
-from .data import DatasetMetadata, DatasetRegistry, DownloadManager
+from .data import DatasetMetadata, DatasetRegistry, DownloadManager, load_tenx_matrix
 from .logging import configure_logging, get_logger
 from .preprocessing import PreprocessingPipeline
 from .utils import (
