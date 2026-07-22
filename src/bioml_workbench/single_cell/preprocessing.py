@@ -16,11 +16,31 @@ def preprocess_adata(
     n_pcs: int = 50,
     n_neighbors: int = 15,
     random_state: int = 42,
-) -> None:
-    """Run a sparse-aware QC, normalization, PCA, neighbors, and UMAP workflow."""
+) -> Any:
+    """Run a sparse-aware QC, normalization, PCA, neighbors, and UMAP workflow.
+
+    Operates on a copy so repeated calls (e.g. re-clicking a UI button) always
+    start from the original loaded dataset rather than compounding filters on
+    an already-filtered object.
+    """
+    adata = adata.copy()
     calculate_qc_metrics(adata)
+
     sc.pp.filter_cells(adata, min_genes=min_genes)
+    if adata.n_obs == 0:
+        raise ValueError(
+            f"filter_cells(min_genes={min_genes}) removed every cell; "
+            "lower min_genes or verify the loaded dataset is not already filtered."
+        )
+
     sc.pp.filter_genes(adata, min_cells=min_cells_per_gene)
+    if adata.n_vars == 0:
+        raise ValueError(
+            f"filter_genes(min_cells={min_cells_per_gene}) removed every gene; "
+            "lower min_cells_per_gene or "
+            "verify the loaded dataset is not already filtered."
+        )
+
     sc.pp.normalize_total(adata, target_sum=target_sum)
     sc.pp.log1p(adata)
 
@@ -44,3 +64,4 @@ def preprocess_adata(
         "n_neighbors": max_neighbors,
         "random_state": random_state,
     }
+    return adata

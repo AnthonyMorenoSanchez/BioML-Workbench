@@ -155,14 +155,15 @@ if page == "Preprocessing":
         n_neighbors = st.number_input("Neighbors", 2, 100, 15)
         if st.button("Run sparse preprocessing"):
             with st.spinner("Calculating QC, PCA, neighbors, and UMAP..."):
-                preprocess_adata(
+                processed_adata = preprocess_adata(
                     adata,
                     min_genes=int(min_genes),
                     n_top_genes=int(n_top_genes),
                     n_pcs=int(n_pcs),
                     n_neighbors=int(n_neighbors),
                 )
-                cluster_cells(adata)
+                cluster_cells(processed_adata)
+                st.session_state.payload["adata"] = processed_adata
             st.success("Preprocessing and Leiden clustering completed.")
 
 if page == "Exploration":
