@@ -1,78 +1,67 @@
 # BioML Workbench
 
 BioML Workbench is a production-oriented Python package for computational biology and MLOps workflows.
-It provides a modular foundation for future omics pipelines, model training, experiment tracking, and deployment.
-
-## Phase 0 Deliverables
-
-- Installable Python package with a clean public API
-- YAML-driven configuration and logging infrastructure
-- Automated tests and CI workflow
-- Docker and Makefile-based developer workflow
-- Documentation, changelog, and roadmap updates
+It provides a modular foundation for omics-style data processing, preprocessing, exploratory analysis, model training, experiment tracking, and interactive dashboards.
 
 ## Quick Start
 
-```bash
+Use the workspace virtual environment for all commands:
+
+```powershell
+# From the repository root
+.\.venv\Scripts\Activate.ps1
 python -m pip install -e .[dev]
-python -m bioml_workbench --show-config
-python -m bioml_workbench --run-workflow
 ```
 
-## End-to-End Workflow
+### Start the Streamlit dashboard
 
-The package now includes a lightweight training workflow that trains a simple classifier, saves metrics and a model artifact, and can be reused as the foundation for larger biological ML pipelines.
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run ui/streamlit_app.py
+```
+
+The dashboard accepts a CSV file with a `sample` column followed by one or more numeric feature columns. After upload it will:
+
+- show sample/feature summaries
+- generate QC statistics
+- run preprocessing steps
+- display feature histograms and processed outputs
+- train a baseline classifier and save metrics to the `artifacts/` folder
+
+### Run the full test suite
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+### Run linting and type checks
+
+```powershell
+.\.venv\Scripts\python.exe -m ruff check src tests
+.\.venv\Scripts\python.exe -m mypy src
+```
+
+## Example Python workflow
 
 ```python
-from bioml_workbench.workflow import TrainingWorkflow
-from bioml_workbench.inference import InferenceService
+from bioml_workbench.dashboard import build_dashboard_payload, load_tabular_data
 
-workflow = TrainingWorkflow(output_dir="artifacts")
-result = workflow.run([[0.0, 0.0], [1.0, 1.0]], [0, 1], model_name="simple_logistic")
-service = InferenceService("artifacts/model.pkl")
-print(service.predict([[0.1, 0.1]]))
+payload = build_dashboard_payload(load_tabular_data("data/raw/example.csv"))
+print(payload["summary"])
 ```
 
-## API Preview
+## Optional ML dependencies
 
-A minimal FastAPI app is available for serving predictions:
+To enable optional experiment tracking and model wrappers, install the extras:
 
-```bash
-uvicorn bioml_workbench.api:app --reload
+```powershell
+.\.venv\Scripts\python.exe -m pip install streamlit mlflow xgboost
 ```
 
-## End-to-End Demo
-
-The project now includes a complete demo pipeline that runs preprocessing, training, artifact generation, and summary export from one entry point:
-
-```bash
-python -m bioml_workbench --run-pipeline
-```
-
-## Development Commands
-
-```bash
-make test
-make lint
-make type-check
-```
-
-## Configuration
-
-The repository loads `configs/default.yaml` by default and supports environment variable overrides via the `BIOML_` prefix.
-
-For more details, see `docs/configuration.md`.
-
-## Core Utilities
-
-Phase 2 adds reusable utilities for file management, caching, timing, seed control, and configuration lifecycle management.
-
-For more details, see `docs/phase_2.md`.
-
-## Project Layout
+## Project layout
 
 - configs/: YAML configuration files
 - src/bioml_workbench/: package implementation
 - tests/: unit tests
 - docs/: project documentation
-- pipeline/, ui/, reports/, notebooks/: future extension points
+- ui/: Streamlit dashboard
+- reports/: generated reports and artifacts

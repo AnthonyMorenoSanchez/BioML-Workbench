@@ -101,21 +101,6 @@ Each phase must include
 
 before progressing.
 
-## Verification policy
-
-Before considering any task complete, the agent must run the required verification commands and confirm results.
-
-The required commands are:
-
-- `mypy src`
-- `ruff format --check .`
-- `pytest`
-- `python -m pip install -e ".[dev]"`
-
-These commands must be executed from the workspace environment before finishing any implementation step.
-If any command fails, the agent must investigate and fix the underlying issue before continuing.
-Do not mark work as finished, merged, or complete based on assumptions, partial inspection, or incomplete validation.
-
 ---
 
 # Repository Architecture

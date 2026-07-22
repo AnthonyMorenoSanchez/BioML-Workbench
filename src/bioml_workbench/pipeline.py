@@ -63,8 +63,9 @@ class EndToEndPipeline:
             encoding="utf-8",
         )
 
+        summary_artifact = str(self.output_dir / "summary.json")
         return {
             "processed_matrix": preprocessed["matrix"],
             "metrics": metrics,
-            "artifacts": training_result["artifacts"] + [str(self.output_dir / "summary.json")],
+            "artifacts": training_result["artifacts"] + [summary_artifact],
         }
