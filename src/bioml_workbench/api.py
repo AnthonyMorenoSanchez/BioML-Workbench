@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from types import SimpleNamespace
 from typing import Any
 
 from fastapi import FastAPI
-from fastapi.testclient import TestClient
 
 from .inference import InferenceService
 
@@ -22,6 +20,3 @@ def predict(payload: dict[str, Any]) -> dict[str, Any]:
     service = InferenceService()
     predictions = service.predict(features)
     return {"predictions": predictions}
-
-
-
