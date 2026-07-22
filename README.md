@@ -42,6 +42,14 @@ Disable the PBMC68k option to switch back to independently uploaded CSV datasets
 
 PBMC68k comes from a single donor. A random cell-level held-out split measures within-dataset interpolation, not performance across donors, experiments, chemistries, or disease states. Published 10x labels should be treated as reference annotations rather than definitive biological ground truth.
 
+### Cohort comparison and differential expression
+
+After preprocessing, use **Comparison Explorer** to define named cohorts from metadata, QC thresholds, gene-expression thresholds, or barcode lists. Cohort definitions are saved as JSON-compatible rules and resolve against the active AnnData object, rather than copying cell data into session state. Select two saved cohorts and an expression layer to create a highlighted UMAP, expression distribution, and multi-gene dot plot.
+
+Use **Differential Expression** only after running a saved comparison. It runs per-gene two-sided Wilcoxon rank-sum tests on the selected sparse expression layer, applies Benjamini-Hochberg correction, and provides a volcano plot. These are cell-level, single-donor exploratory results, not donor-level biological inference.
+
+**Export comparison report** writes cohort rules, selected barcode lists, cohort and gene-expression summaries, DE results, Plotly HTML figures, and a Markdown report under a unique `artifacts/runs/` directory.
+
 ### Label format
 
 Upload a CSV or TSV table with a `barcode` column and a label column, then choose its provenance in the **Labels** page. Labels are aligned strictly by barcode, duplicate barcodes are rejected, and unmatched barcodes are reported.

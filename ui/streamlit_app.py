@@ -15,12 +15,20 @@ from bioml_workbench.experiment import ExperimentRun
 from bioml_workbench.single_cell import (
     cluster_cells,
     cluster_size_figure,
+    cohort_umap_figure,
+    compare_cohorts,
+    create_cohort_definition,
     embedding_figure,
+    expression_distribution_figure,
+    multi_gene_dotplot_figure,
     preprocess_adata,
     qc_scatter_figure,
     rank_marker_genes,
+    resolve_cohort,
     train_classifier,
+    volcano_figure,
 )
+from bioml_workbench.single_cell.comparison import export_comparison
 
 st.set_page_config(page_title="BioML Workbench", layout="wide")
 
@@ -32,6 +40,8 @@ st.write(
 
 if "payload" not in st.session_state:
     st.session_state.payload = None
+if "cohorts" not in st.session_state:
+    st.session_state.cohorts = {}
 
 pages = [
     "Home",
@@ -40,6 +50,8 @@ pages = [
     "QC",
     "Preprocessing",
     "Exploration",
+    "Comparison Explorer",
+    "Differential Expression",
     "Training",
     "Evaluation",
 ]
@@ -181,6 +193,150 @@ if page == "Exploration":
         st.plotly_chart(cluster_size_figure(adata), use_container_width=True)
         if st.button("Rank marker genes"):
             st.dataframe(rank_marker_genes(adata))
+
+if page == "Comparison Explorer":
+    st.header("Comparison Explorer")
+    if adata is None or "X_umap" not in adata.obsm:
+        st.info("Run sparse preprocessing before defining cohorts.")
+    else:
+        layer = st.selectbox("Expression layer", ["X", *list(adata.layers.keys())])
+        cohort_name = st.text_input("New cohort name")
+        filter_type = st.selectbox("Filter type", ["metadata", "qc", "gene", "barcode"])
+        filter_payload = None
+        if filter_type in {"metadata", "qc"}:
+            column = st.selectbox("Column", list(adata.obs.columns))
+            if filter_type == "metadata":
+                values = st.multiselect(
+                    "Values", sorted(adata.obs[column].astype(str).unique())
+                )
+                filter_payload = {
+                    "type": "metadata",
+                    "column": column,
+                    "operator": "in",
+                    "values": values,
+                }
+            else:
+                threshold = st.number_input("Maximum value", value=20.0)
+                filter_payload = {
+                    "type": "qc",
+                    "column": column,
+                    "operator": "<",
+                    "value": threshold,
+                }
+        elif filter_type == "gene":
+            gene = st.selectbox("Gene", list(adata.var_names))
+            threshold = st.number_input("Minimum expression", value=0.0)
+            filter_payload = {
+                "type": "gene",
+                "gene": gene,
+                "operator": ">=",
+                "value": threshold,
+            }
+        else:
+            barcodes = st.text_area("Barcodes, one per line").splitlines()
+            filter_payload = {"type": "barcode", "operator": "in", "values": barcodes}
+        if st.button("Save cohort"):
+            try:
+                definition = create_cohort_definition(
+                    cohort_name, [filter_payload], expression_layer=layer
+                )
+                mask, report = resolve_cohort(adata, definition)
+                st.session_state.cohorts[cohort_name] = {
+                    "definition": definition,
+                    "mask": mask,
+                }
+                st.success(f"Saved cohort with {report['cell_count']} cells.")
+            except ValueError as exc:
+                st.error(str(exc))
+        saved_names = list(st.session_state.cohorts)
+        if len(saved_names) >= 2:
+            cohort_a_name = st.selectbox("Cohort A", saved_names)
+            cohort_b_name = st.selectbox("Cohort B", saved_names, index=1)
+            genes = st.multiselect("Genes", list(adata.var_names), max_selections=10)
+            if st.button("Run cohort comparison"):
+                cohort_a = st.session_state.cohorts[cohort_a_name]
+                cohort_b = st.session_state.cohorts[cohort_b_name]
+                masks = {
+                    cohort_a_name: cohort_a["mask"],
+                    cohort_b_name: cohort_b["mask"],
+                }
+                figures = {
+                    "cohort_umap": cohort_umap_figure(
+                        adata,
+                        cohort_a["mask"],
+                        cohort_b["mask"],
+                        cohort_a_name,
+                        cohort_b_name,
+                    ),
+                    "dotplot": (
+                        multi_gene_dotplot_figure(adata, genes, masks, layer)
+                        if genes
+                        else cluster_size_figure(adata)
+                    ),
+                }
+                st.session_state.comparison = {
+                    "a": cohort_a_name,
+                    "b": cohort_b_name,
+                    "genes": genes,
+                    "layer": layer,
+                    "figures": figures,
+                }
+                st.plotly_chart(figures["cohort_umap"], use_container_width=True)
+                if genes:
+                    st.plotly_chart(
+                        expression_distribution_figure(adata, genes[0], masks, layer),
+                        use_container_width=True,
+                    )
+                    st.plotly_chart(figures["dotplot"], use_container_width=True)
+        else:
+            st.info("Save two cohorts to compare them.")
+
+if page == "Differential Expression":
+    st.header("Differential Expression")
+    st.warning(
+        "Single-donor, cell-level comparison. Results are exploratory and not "
+        "donor-level inference."
+    )
+    comparison = st.session_state.get("comparison")
+    if adata is None or comparison is None:
+        st.info("Create and run a saved cohort comparison first.")
+    else:
+        min_cells = st.number_input("Minimum cells per cohort", min_value=2, value=20)
+        if st.button("Run exploratory Wilcoxon DE"):
+            cohort_a = st.session_state.cohorts[comparison["a"]]
+            cohort_b = st.session_state.cohorts[comparison["b"]]
+            try:
+                results = compare_cohorts(
+                    adata,
+                    cohort_a["mask"],
+                    cohort_b["mask"],
+                    layer=comparison["layer"],
+                    min_cells_per_group=int(min_cells),
+                )
+                st.session_state.de_results = results
+                st.dataframe(results)
+                st.plotly_chart(volcano_figure(results), use_container_width=True)
+            except ValueError as exc:
+                st.error(str(exc))
+        results = st.session_state.get("de_results")
+        if results is not None and st.button("Export comparison report"):
+            run = ExperimentRun.create("artifacts", "cohort-comparison")
+            a = st.session_state.cohorts[comparison["a"]]
+            b = st.session_state.cohorts[comparison["b"]]
+            paths = export_comparison(
+                run.path,
+                adata,
+                a["definition"],
+                b["definition"],
+                a["mask"],
+                b["mask"],
+                comparison["genes"],
+                comparison["layer"],
+                comparison["figures"],
+                results,
+            )
+            st.success("Saved comparison artifacts.")
+            st.json(paths)
 
 if page == "Training":
     st.header("Training")

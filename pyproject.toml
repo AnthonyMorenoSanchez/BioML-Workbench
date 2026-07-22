@@ -66,7 +66,7 @@ warn_unused_configs = true
 
 
 [[tool.mypy.overrides]]
-module = ["anndata", "anndata.*", "scanpy", "scanpy.*", "scvelo", "scvelo.*"]
+module = ["anndata", "anndata.*", "scanpy", "scanpy.*", "scipy", "scipy.*", "scvelo", "scvelo.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
