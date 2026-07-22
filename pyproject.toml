@@ -15,8 +15,10 @@ dependencies = [
 	"scipy>=1.11",
 	"scikit-learn>=1.3",
 	"fastapi",
-    "anndata",
-    "scvelo",
+	"anndata",
+	"scvelo",
+	"igraph>=0.11",
+	"leidenalg>=0.10",
 ]
 
 [project.optional-dependencies]
@@ -24,7 +26,6 @@ dev = ["black>=24.0", "httpx>=0.27", "mypy>=1.10", "pytest>=8.0", "ruff>=0.5", "
 ml = ["mlflow", "wandb"]
 ui = ["streamlit"]
 xgboost = ["xgboost"]
-singlecell = ["anndata>=0.10", "scvelo>=0.3"]
 
 [project.scripts]
 bioml-workbench = "bioml_workbench.cli:main"
@@ -62,5 +63,5 @@ warn_unused_configs = true
 
 
 [[tool.mypy.overrides]]
-module = ["anndata", "anndata.*", "scvelo", "scvelo.*"]
+module = ["anndata", "anndata.*", "scanpy", "scanpy.*", "scvelo", "scvelo.*"]
 ignore_missing_imports = true

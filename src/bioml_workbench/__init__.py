@@ -13,6 +13,7 @@ from .configuration_manager import ConfigurationManager
 from .data import DatasetMetadata, DatasetRegistry, DownloadManager
 from .logging import configure_logging, get_logger
 from .preprocessing import PreprocessingPipeline
+from .single_cell import calculate_qc_metrics, cluster_cells, preprocess_adata
 from .utils import (
     CacheManager,
     FileManager,
@@ -33,7 +34,10 @@ __all__ = [
     "FileManager",
     "PreprocessingPipeline",
     "CacheManager",
+    "calculate_qc_metrics",
+    "cluster_cells",
     "LoggingConfig",
+    "preprocess_adata",
     "SeedManager",
     "Timer",
     "TrainingConfig",
