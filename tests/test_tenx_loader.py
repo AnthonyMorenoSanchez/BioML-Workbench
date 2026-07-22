@@ -9,8 +9,7 @@ def test_load_tenx_matrix_reads_sparse_matrix_and_metadata(tmp_path: Path) -> No
 
     (matrix_dir / "barcodes.tsv").write_text("cell_1\ncell_2\n", encoding="utf-8")
     (matrix_dir / "genes.tsv").write_text(
-        "gene_1\tGene 1\tGeneType\n"
-        "gene_2\tGene 2\tGeneType\n",
+        "gene_1\tGene 1\tGeneType\n" "gene_2\tGene 2\tGeneType\n",
         encoding="utf-8",
     )
     (matrix_dir / "matrix.mtx").write_text(

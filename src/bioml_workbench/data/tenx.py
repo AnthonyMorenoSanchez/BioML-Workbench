@@ -7,7 +7,7 @@ from scipy.io import mmread  # type: ignore[import-untyped]
 
 
 def load_tenx_matrix(path: str | Path) -> dict[str, Any]:
-    """Load a legacy 10x-style sparse matrix directory 
+    """Load a legacy 10x-style sparse matrix directory
     into a simple in-memory structure."""
     matrix_dir = Path(path)
     barcodes_path = matrix_dir / "barcodes.tsv"
@@ -21,8 +21,9 @@ def load_tenx_matrix(path: str | Path) -> dict[str, Any]:
         sample_names = [line.strip() for line in handle if line.strip()]
 
     with genes_path.open("r", encoding="utf-8") as handle:
-        feature_rows = [line.rstrip("\n").split("\t") 
-                        for line in handle if line.strip()]
+        feature_rows = [
+            line.rstrip("\n").split("\t") for line in handle if line.strip()
+        ]
 
     feature_names = [row[0] for row in feature_rows]
     feature_metadata = [

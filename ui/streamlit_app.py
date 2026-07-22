@@ -15,8 +15,10 @@ from bioml_workbench.workflow import TrainingWorkflow
 st.set_page_config(page_title="BioML Workbench", layout="wide")
 
 st.title("BioML Workbench")
-st.write("Upload a tabular biological dataset to inspect features, " \
-"run QC, preprocess it, and train a baseline model.")
+st.write(
+    "Upload a tabular biological dataset to inspect features, "
+    "run QC, preprocess it, and train a baseline model."
+)
 
 if "payload" not in st.session_state:
     st.session_state.payload = None
@@ -36,8 +38,9 @@ st.sidebar.caption("Choose a data source")
 use_pbmc = st.sidebar.checkbox("Use PBMC68k sample dataset", value=False)
 
 if use_pbmc:
-    st.sidebar.caption("The first load downloads and caches " \
-    "the sparse dataset locally.")
+    st.sidebar.caption(
+        "The first load downloads and caches " "the sparse dataset locally."
+    )
     if st.sidebar.button("Load PBMC68k"):
         try:
             with st.spinner("Loading cached PBMC68k data or downloading it once..."):
@@ -78,8 +81,8 @@ if page == "Dataset Explorer":
     st.dataframe(
         {
             "sample": payload["sample_names"],
-            "feature_count": 
-            [len(payload["feature_names"])] * len(payload["sample_names"]),
+            "feature_count": [len(payload["feature_names"])]
+            * len(payload["sample_names"]),
         }
     )
 

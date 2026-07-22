@@ -20,6 +20,7 @@ def _sample_dense_matrix(
         return [list(row) for row in matrix.toarray().tolist()]
     return [list(row) for row in matrix]
 
+
 def _row_count(matrix: Any) -> int:
     if hasattr(matrix, "shape"):
         return int(matrix.shape[0])
@@ -27,7 +28,7 @@ def _row_count(matrix: Any) -> int:
 
 
 def load_tabular_data(path: str | Path) -> dict[str, Any]:
-    """Load a tabular matrix from a CSV file with 
+    """Load a tabular matrix from a CSV file with
     a sample column and feature columns."""
     file_path = Path(path)
     with file_path.open("r", encoding="utf-8", newline="") as handle:
@@ -39,8 +40,7 @@ def load_tabular_data(path: str | Path) -> dict[str, Any]:
     feature_names = [name for name in rows[0].keys() if name != "sample"]
     sample_names = [row["sample"] for row in rows]
     matrix = [
-        [float(row[feature_name]) for feature_name in feature_names]
-        for row in rows
+        [float(row[feature_name]) for feature_name in feature_names] for row in rows
     ]
     return {
         "sample_names": sample_names,
@@ -117,7 +117,7 @@ def build_dashboard_payload(data: dict[str, Any]) -> dict[str, Any]:
         )
         for index, feature_name in enumerate(
             data["feature_names"][: len(sample_matrix[0])]
-            )
+        )
     }
 
     pipeline = PreprocessingPipeline()

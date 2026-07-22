@@ -21,9 +21,7 @@ def test_load_tabular_data_parses_csv(tmp_path: Path) -> None:
     assert payload["matrix"][1][1] == 1.3
 
 
-def test_load_pbmc68k_dataset_reuses_h5ad_cache(
-    monkeypatch, tmp_path: Path
-) -> None:
+def test_load_pbmc68k_dataset_reuses_h5ad_cache(monkeypatch, tmp_path: Path) -> None:
     cache_path = tmp_path / "pbmc68k" / "pbmc68k.h5ad"
     cache_path.parent.mkdir(parents=True)
     cache_path.touch()
@@ -41,7 +39,8 @@ def test_load_pbmc68k_dataset_reuses_h5ad_cache(
     )
     fake_scvelo = SimpleNamespace(
         datasets=SimpleNamespace(
-            pbmc68k=lambda: (_ for _ in ()).throw(AssertionError()))
+            pbmc68k=lambda: (_ for _ in ()).throw(AssertionError())
+        )
     )
     monkeypatch.setitem(sys.modules, "anndata", fake_anndata)
     monkeypatch.setitem(sys.modules, "scvelo", fake_scvelo)
